@@ -35,11 +35,36 @@ AppAsset::register($this);
         ],
     ]);
     $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
+        ['label' => 'Dashboard', 'url' => ['/site/index']],
     ];
-    if (Yii::$app->user->isGuest) {
+
+    if (!Yii::$app->user->isGuest) {
+        $menuItems[] = [
+            'label' => 'Ingredients',
+            'items' => [
+                ['label' => 'All Ingredients', 'url' => ['/ingredient/index']],
+                ['label' => 'Add New', 'url' => ['/ingredient/create']],
+                '<div class="dropdown-divider"></div>',
+                ['label' => 'By Category', 'url' => '#', 'options' => ['class' => 'dropdown-header']],
+                ['label' => 'Proteins', 'url' => ['/ingredient/index', 'IngredientSearch[category]' => 'protein']],
+                ['label' => 'Grains', 'url' => ['/ingredient/index', 'IngredientSearch[category]' => 'grain']],
+                ['label' => 'Milk Alternatives', 'url' => ['/ingredient/index', 'IngredientSearch[category]' => 'milk_alternative']],
+            ],
+        ];
+        $menuItems[] = [
+            'label' => 'Comparisons',
+            'items' => [
+                ['label' => 'All Comparisons', 'url' => ['/comparison/index']],
+                ['label' => 'Generate Comparison', 'url' => ['/comparison/generate']],
+                ['label' => 'Batch Generate', 'url' => ['/comparison/batch-generate']],
+                ['label' => 'Create Manual', 'url' => ['/comparison/create']],
+            ],
+        ];
+        $menuItems[] = ['label' => 'View Frontend', 'url' => 'http://localhost:8081', 'linkOptions' => ['target' => '_blank']];
+    } else {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
-    }     
+    }
+
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav me-auto mb-2 mb-md-0'],
         'items' => $menuItems,
