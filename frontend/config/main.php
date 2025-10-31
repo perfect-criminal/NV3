@@ -36,14 +36,25 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                // Ingredient routes
+                'ingredient' => 'ingredient/index',
+                'ingredient/category/<category>' => 'ingredient/category',
+                'ingredient/search' => 'ingredient/search',
+                'ingredient/finder' => 'ingredient/finder',
+                'ingredient/<slug>' => 'ingredient/view',
+
+                // Comparison routes
+                'compare' => 'compare/index',
+                'compare/<slug>' => 'compare/view',
+
+                // Default
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ],
         ],
-        */
     ],
     'params' => $params,
 ];
