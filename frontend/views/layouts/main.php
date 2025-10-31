@@ -36,6 +36,24 @@ AppAsset::register($this);
     ]);
     $menuItems = [
         ['label' => 'Home', 'url' => ['/site/index']],
+        [
+            'label' => 'Ingredients',
+            'items' => [
+                ['label' => 'Browse All', 'url' => ['/ingredient/index']],
+                '<div class="dropdown-divider"></div>',
+                ['label' => 'By Category', 'url' => '#', 'options' => ['class' => 'dropdown-header']],
+                ['label' => 'Proteins', 'url' => ['/ingredient/category', 'category' => 'protein']],
+                ['label' => 'Grains', 'url' => ['/ingredient/category', 'category' => 'grain']],
+                ['label' => 'Vegetables', 'url' => ['/ingredient/category', 'category' => 'vegetable']],
+                ['label' => 'Fruits', 'url' => ['/ingredient/category', 'category' => 'fruit']],
+                ['label' => 'Nuts & Seeds', 'url' => ['/ingredient/category', 'category' => 'nut']],
+                ['label' => 'Legumes', 'url' => ['/ingredient/category', 'category' => 'legume']],
+                ['label' => 'Milk Alternatives', 'url' => ['/ingredient/category', 'category' => 'milk_alternative']],
+            ],
+        ],
+        ['label' => 'Advanced Search', 'url' => ['/ingredient/search']],
+        ['label' => 'Compare', 'url' => ['/ingredient/finder']],
+        ['label' => 'Comparisons', 'url' => ['/compare/index']],
         ['label' => 'About', 'url' => ['/site/about']],
         ['label' => 'Contact', 'url' => ['/site/contact']],
     ];
