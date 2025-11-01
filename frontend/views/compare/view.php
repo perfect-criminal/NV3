@@ -21,45 +21,71 @@ if ($model->schema_data) {
 ?>
 <div class="compare-view">
 
-    <!-- Header -->
-    <div class="page-header">
-        <h1><?= Html::encode($model->title) ?></h1>
-        <p class="lead">
-            <span class="label label-info"><?= Html::encode($model->ingredientA->category ?? 'N/A') ?></span>
-            <strong><?= Html::encode($model->ingredientA->name ?? 'N/A') ?></strong>
-            vs
-            <span class="label label-info"><?= Html::encode($model->ingredientB->category ?? 'N/A') ?></span>
-            <strong><?= Html::encode($model->ingredientB->name ?? 'N/A') ?></strong>
-        </p>
+    <!-- Header with Visual Comparison -->
+    <div class="comparison-card mb-5">
+        <div class="comparison-header">
+            <div class="row align-items-center">
+                <div class="col-md-5 text-center">
+                    <div class="mb-3">
+                        <span class="badge badge-category">
+                            <?= Html::encode($model->ingredientA->category ?? 'N/A') ?>
+                        </span>
+                    </div>
+                    <h2 class="text-primary"><?= Html::encode($model->ingredientA->name ?? 'Ingredient A') ?></h2>
+                </div>
+                <div class="col-md-2 text-center">
+                    <span class="comparison-vs">VS</span>
+                </div>
+                <div class="col-md-5 text-center">
+                    <div class="mb-3">
+                        <span class="badge badge-category">
+                            <?= Html::encode($model->ingredientB->category ?? 'N/A') ?>
+                        </span>
+                    </div>
+                    <h2 class="text-success"><?= Html::encode($model->ingredientB->name ?? 'Ingredient B') ?></h2>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Summary -->
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h3 class="panel-title"><span class="glyphicon glyphicon-info-sign"></span> Quick Summary (TL;DR)</h3>
+    <!-- Quick Summary (TL;DR) -->
+    <div class="card mb-4 border-primary">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">
+                <span class="glyphicon glyphicon-flash"></span> Quick Summary (TL;DR)
+            </h3>
         </div>
-        <div class="panel-body">
-            <p class="lead"><?= nl2br(Html::encode($model->summary)) ?></p>
+        <div class="card-body">
+            <p class="lead mb-3"><?= nl2br(Html::encode($model->summary)) ?></p>
             <?php if ($model->winner_category): ?>
-                <p><strong>Winner:</strong> <?= Html::encode($model->winner_category) ?></p>
+                <div class="alert alert-info mb-0">
+                    <strong><span class="glyphicon glyphicon-trophy"></span> Winner:</strong>
+                    <?= Html::encode($model->winner_category) ?>
+                </div>
             <?php endif; ?>
         </div>
     </div>
 
     <!-- Key Differences -->
     <?php if ($model->key_differences): ?>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title"><span class="glyphicon glyphicon-stats"></span> Key Differences</h3>
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="mb-0">
+                    <span class="glyphicon glyphicon-stats"></span> Key Differences
+                </h3>
             </div>
-            <div class="panel-body">
+            <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover table-bordered">
-                        <thead class="bg-primary">
+                    <table class="table table-hover mb-0">
+                        <thead>
                             <tr>
                                 <th width="25%">Category</th>
-                                <th width="37.5%"><?= Html::encode($model->ingredientA->name ?? 'Ingredient A') ?></th>
-                                <th width="37.5%"><?= Html::encode($model->ingredientB->name ?? 'Ingredient B') ?></th>
+                                <th width="37.5%" class="text-primary">
+                                    <?= Html::encode($model->ingredientA->name ?? 'Ingredient A') ?>
+                                </th>
+                                <th width="37.5%" class="text-success">
+                                    <?= Html::encode($model->ingredientB->name ?? 'Ingredient B') ?>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -78,45 +104,40 @@ if ($model->schema_data) {
     <?php endif; ?>
 
     <!-- Introduction -->
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title"><span class="glyphicon glyphicon-book"></span> Introduction</h3>
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3 class="mb-0">
+                <span class="glyphicon glyphicon-book"></span> Introduction
+            </h3>
         </div>
-        <div class="panel-body">
-            <div style="font-size: 16px; line-height: 1.6;">
+        <div class="card-body">
+            <div style="font-size: 1.1rem; line-height: 1.8; color: #495057;">
                 <?= nl2br(Html::encode($model->introduction)) ?>
             </div>
         </div>
     </div>
 
-    <!-- Nutrition Comparison Chart (if comparison_data exists) -->
+    <!-- Nutrition Comparison -->
     <?php if ($model->comparison_data && isset($model->comparison_data['nutrition'])): ?>
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                <h3 class="panel-title"><span class="glyphicon glyphicon-heart"></span> Nutrition Comparison</h3>
+        <div class="card mb-4 border-success">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0">
+                    <span class="glyphicon glyphicon-heart"></span> Nutrition Comparison
+                </h3>
             </div>
-            <div class="panel-body">
-                <div class="row">
+            <div class="card-body">
+                <div class="nutrition-comparison">
                     <?php foreach ($model->comparison_data['nutrition'] as $nutrient => $data): ?>
                         <?php if (isset($data['ingredient_a'], $data['ingredient_b'])): ?>
-                            <div class="col-md-4">
-                                <div class="text-center" style="margin-bottom: 20px;">
-                                    <h4><?= ucfirst($nutrient) ?></h4>
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-success" style="width: 50%">
-                                            <?= Html::encode($model->ingredientA->name) ?>: <?= $data['ingredient_a'] ?>
-                                        </div>
-                                    </div>
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-info" style="width: 50%">
-                                            <?= Html::encode($model->ingredientB->name) ?>: <?= $data['ingredient_b'] ?>
-                                        </div>
-                                    </div>
-                                    <?php if (isset($data['winner'])): ?>
-                                        <small class="text-muted">
-                                            Winner: <?= $data['winner'] === 'a' ? $model->ingredientA->name : $model->ingredientB->name ?>
-                                        </small>
-                                    <?php endif; ?>
+                            <div class="nutrition-row">
+                                <div class="nutrition-label">
+                                    <?= ucwords(str_replace('_', ' ', $nutrient)) ?>
+                                </div>
+                                <div class="nutrition-value <?= isset($data['winner']) && $data['winner'] === 'a' ? 'winner' : '' ?>">
+                                    <?= Html::encode($data['ingredient_a']) ?>
+                                </div>
+                                <div class="nutrition-value <?= isset($data['winner']) && $data['winner'] === 'b' ? 'winner' : '' ?>">
+                                    <?= Html::encode($data['ingredient_b']) ?>
                                 </div>
                             </div>
                         <?php endif; ?>
@@ -127,75 +148,115 @@ if ($model->schema_data) {
     <?php endif; ?>
 
     <!-- Recommendations -->
-    <div class="panel panel-warning">
-        <div class="panel-heading">
-            <h3 class="panel-title"><span class="glyphicon glyphicon-star"></span> Recommendations</h3>
+    <div class="card mb-4 border-warning">
+        <div class="card-header bg-warning">
+            <h3 class="mb-0">
+                <span class="glyphicon glyphicon-star"></span> Recommendations
+            </h3>
         </div>
-        <div class="panel-body">
-            <div style="font-size: 16px; line-height: 1.6;">
+        <div class="card-body">
+            <div style="font-size: 1.1rem; line-height: 1.8; color: #495057;">
                 <?= nl2br(Html::encode($model->recommendations)) ?>
             </div>
         </div>
     </div>
 
-    <!-- Conclusion -->
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <h3 class="panel-title"><span class="glyphicon glyphicon-check"></span> The Verdict</h3>
+    <!-- The Verdict -->
+    <div class="card mb-4 border-info">
+        <div class="card-header bg-info text-white">
+            <h3 class="mb-0">
+                <span class="glyphicon glyphicon-check"></span> The Verdict
+            </h3>
         </div>
-        <div class="panel-body">
-            <div style="font-size: 16px; line-height: 1.6;">
+        <div class="card-body">
+            <div style="font-size: 1.1rem; line-height: 1.8; color: #495057;">
                 <?= nl2br(Html::encode($model->conclusion)) ?>
             </div>
         </div>
     </div>
 
-    <!-- Feedback -->
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Was this comparison helpful?</h3>
+    <!-- Feedback Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3 class="mb-0">
+                <span class="glyphicon glyphicon-comment"></span> Was this comparison helpful?
+            </h3>
         </div>
-        <div class="panel-body text-center">
-            <p>
+        <div class="card-body text-center py-4">
+            <div class="mb-4">
                 <?= Html::a(
-                    '<span class="glyphicon glyphicon-thumbs-up"></span> Yes, helpful (' . $model->helpful_count . ')',
+                    '<span class="glyphicon glyphicon-thumbs-up"></span> Yes, helpful <span class="badge bg-success">' . $model->helpful_count . '</span>',
                     ['helpful', 'id' => $model->id],
-                    ['class' => 'btn btn-success btn-lg', 'data-method' => 'post']
+                    ['class' => 'btn btn-success btn-lg me-3', 'data-method' => 'post']
                 ) ?>
                 <?= Html::a(
-                    '<span class="glyphicon glyphicon-thumbs-down"></span> Not helpful (' . $model->not_helpful_count . ')',
+                    '<span class="glyphicon glyphicon-thumbs-down"></span> Not helpful <span class="badge bg-secondary">' . $model->not_helpful_count . '</span>',
                     ['not-helpful', 'id' => $model->id],
-                    ['class' => 'btn btn-default btn-lg', 'data-method' => 'post']
+                    ['class' => 'btn btn-outline-secondary btn-lg', 'data-method' => 'post']
                 ) ?>
-            </p>
-            <small class="text-muted">
-                <?= $model->getHelpfulPercentage() ?>% found this comparison helpful
-            </small>
+            </div>
+            <div class="progress" style="height: 25px; max-width: 400px; margin: 0 auto;">
+                <div class="progress-bar bg-success"
+                     role="progressbar"
+                     style="width: <?= $model->getHelpfulPercentage() ?>%;"
+                     aria-valuenow="<?= $model->getHelpfulPercentage() ?>"
+                     aria-valuemin="0"
+                     aria-valuemax="100">
+                    <?= $model->getHelpfulPercentage() ?>% found this helpful
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- View Stats -->
-    <p class="text-muted text-center">
-        <small>
-            <span class="glyphicon glyphicon-eye-open"></span> <?= number_format($model->view_count) ?> views
+    <!-- View Stats & Meta -->
+    <div class="text-center text-muted mb-5">
+        <p class="mb-2">
+            <span class="badge bg-light text-dark">
+                <span class="glyphicon glyphicon-eye-open"></span> <?= number_format($model->view_count) ?> views
+            </span>
             <?php if ($model->ai_generated): ?>
-                &nbsp;&nbsp;<span class="glyphicon glyphicon-cog"></span> AI-Generated
+                <span class="badge bg-info">
+                    <span class="glyphicon glyphicon-cog"></span> AI-Generated
+                </span>
             <?php endif; ?>
-        </small>
-    </p>
+            <span class="badge bg-light text-dark">
+                <span class="glyphicon glyphicon-time"></span>
+                Updated <?= Yii::$app->formatter->asRelativeTime($model->updated_at) ?>
+            </span>
+        </p>
+    </div>
+
+    <!-- Related Comparisons -->
+    <div class="mt-5 mb-4">
+        <h3 class="text-center mb-4">Explore More Comparisons</h3>
+        <div class="text-center">
+            <?= Html::a(
+                '<span class="glyphicon glyphicon-th-list"></span> View All Comparisons',
+                ['index'],
+                ['class' => 'btn btn-primary btn-lg me-2']
+            ) ?>
+            <?= Html::a(
+                '<span class="glyphicon glyphicon-transfer"></span> Create New Comparison',
+                ['/ingredient/finder'],
+                ['class' => 'btn btn-success btn-lg']
+            ) ?>
+        </div>
+    </div>
 
 </div>
 
 <style>
-.comparison-card {
-    transition: box-shadow 0.3s;
+.me-3 {
+    margin-right: 1rem;
 }
-
-.comparison-card:hover {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+.me-2 {
+    margin-right: 0.5rem;
 }
-
-.table-hover tbody tr:hover {
-    background-color: #f5f5f5;
+.py-4 {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+.align-items-center {
+    align-items: center;
 }
 </style>
