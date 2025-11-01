@@ -155,29 +155,74 @@ chmod -R 777 console/runtime
 # 1. Run migrations
 php yii migrate
 
-# 2. Create admin (manual SQL or signup page)
+# 2. Create admin user
+php yii admin/setup
 
-# 3. Start backend
-php yii serve --docroot=backend/web --port=8080
+# 3. Seed sample data (12 ingredients + 5 comparisons)
+php yii seed/all
 
-# 4. Login at http://localhost:8080
+# 4. Start servers (or use ./start.sh)
+php yii serve --docroot=backend/web --port=8080 &
+php yii serve --docroot=frontend/web --port=8081 &
 
-# 5. Create ingredients at /ingredient/create
-
-# 6. Generate comparisons at /comparison/generate
-
-# 7. Start frontend (new terminal)
-php yii serve --docroot=frontend/web --port=8081
-
-# 8. View public site at http://localhost:8081
+# 5. Access the sites
+# Backend:  http://localhost:8080 (login: admin / admin123)
+# Frontend: http://localhost:8081
 ```
 
-## Seeding Initial Data
+**Alternative - Manual Setup:**
+```bash
+# Skip seeding and create data manually
+# 1. Login to backend at http://localhost:8080
+# 2. Create ingredients at /ingredient/create
+# 3. Generate comparisons at /comparison/generate
+# 4. View frontend at http://localhost:8081
+```
 
-After creating admin user, you can manually add test ingredients through the backend at:
+## Seeding Sample Data (Optional but Recommended!)
+
+We've created a comprehensive data seeder to populate your database with beautiful sample ingredients and comparisons!
+
+### Quick Seed Everything
+
+```bash
+php yii seed/all
+```
+
+This will create:
+- 12 realistic vegan ingredients (Tofu, Quinoa, Chickpeas, Almonds, Spinach, etc.)
+- 5 AI-generated comparisons
+- All with complete nutrition data, descriptions, and metadata
+
+### Individual Commands
+
+```bash
+# Seed only ingredients
+php yii seed/ingredients
+
+# Seed only comparisons
+php yii seed/comparisons
+
+# Generate specific number of comparisons
+php yii seed/comparisons 10
+```
+
+### What You Get
+
+Each ingredient includes:
+- Complete nutrition data (90+ fields)
+- Detailed descriptions
+- Cooking methods and tips
+- Health benefits
+- Sustainability scores
+- Dietary flags (gluten-free, nut-free, etc.)
+
+**See full documentation in [DATA_SEEDING.md](DATA_SEEDING.md)**
+
+### Manual Entry
+
+You can also manually add ingredients through the backend:
 `http://localhost:8080/ingredient/create`
-
-Or create a seeding script (we can build this if needed).
 
 ## Troubleshooting
 
