@@ -3,6 +3,8 @@
 namespace backend\controllers;
 
 use common\models\LoginForm;
+use common\models\Ingredient;
+use common\models\Comparison;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -62,7 +64,33 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        // Gather statistics
+        $stats = [
+            'totalIngredients' => Ingredient::find()->count(),
+            'publishedIngredients' => Ingredient::find()->where(['status' => Ingredient::STATUS_PUBLISHED])->count(),
+            'draftIngredients' => Ingredient::find()->where(['status' => Ingredient::STATUS_DRAFT])->count(),
+            'totalComparisons' => Comparison::find()->count(),
+            'publishedComparisons' => Comparison::find()->where(['status' => Comparison::STATUS_PUBLISHED])->count(),
+            'aiGeneratedComparisons' => Comparison::find()->where(['ai_generated' => 1])->count(),
+        ];
+
+        // Get recent ingredients
+        $recentIngredients = Ingredient::find()
+            ->orderBy(['created_at' => SORT_DESC])
+            ->limit(5)
+            ->all();
+
+        // Get recent comparisons
+        $recentComparisons = Comparison::find()
+            ->orderBy(['created_at' => SORT_DESC])
+            ->limit(5)
+            ->all();
+
+        return $this->render('index', [
+            'stats' => $stats,
+            'recentIngredients' => $recentIngredients,
+            'recentComparisons' => $recentComparisons,
+        ]);
     }
 
     /**

@@ -6,59 +6,84 @@ use yii\helpers\Url;
 /* @var $model common\models\Ingredient */
 ?>
 
-<div class="col-md-3 col-sm-6">
-    <div class="panel panel-default ingredient-card" style="min-height: 350px;">
+<div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+    <div class="card ingredient-card h-100">
+        <!-- Image Section -->
         <?php if ($model->featuredImage): ?>
-            <div class="panel-heading" style="padding: 0;">
+            <div class="position-relative">
                 <img src="<?= Html::encode($model->featuredImage->getUrl()) ?>"
                      alt="<?= Html::encode($model->name) ?>"
-                     class="img-responsive"
-                     style="width: 100%; height: 150px; object-fit: cover;">
+                     class="card-img-top"
+                     style="height: 200px; object-fit: cover;">
+                <span class="badge badge-category category-badge position-absolute">
+                    <?= Html::encode(common\models\Ingredient::getCategories()[$model->category] ?? $model->category) ?>
+                </span>
             </div>
         <?php else: ?>
-            <div class="panel-heading" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 150px; display: flex; align-items: center; justify-content: center;">
-                <h2 style="color: white; margin: 0;"><?= Html::encode(substr($model->name, 0, 1)) ?></h2>
+            <div class="position-relative" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 200px; display: flex; align-items: center; justify-content: center;">
+                <h1 style="color: white; font-size: 4rem; margin: 0; font-weight: 700;">
+                    <?= Html::encode(mb_strtoupper(mb_substr($model->name, 0, 1))) ?>
+                </h1>
+                <span class="badge badge-category category-badge position-absolute">
+                    <?= Html::encode(common\models\Ingredient::getCategories()[$model->category] ?? $model->category) ?>
+                </span>
             </div>
         <?php endif; ?>
 
-        <div class="panel-body">
-            <h4 style="min-height: 50px;">
-                <?= Html::a(Html::encode($model->name), ['view', 'slug' => $model->slug]) ?>
-            </h4>
-
-            <p class="text-muted">
-                <span class="label label-primary"><?= Html::encode(common\models\Ingredient::getCategories()[$model->category] ?? $model->category) ?></span>
-            </p>
+        <!-- Card Body -->
+        <div class="card-body d-flex flex-column">
+            <h5 class="card-title mb-3">
+                <?= Html::a(
+                    Html::encode($model->name),
+                    ['view', 'slug' => $model->slug],
+                    ['class' => 'text-dark text-decoration-none']
+                ) ?>
+            </h5>
 
             <?php if ($model->summary): ?>
-                <p class="text-muted" style="font-size: 13px;">
-                    <?= Html::encode(mb_substr($model->summary, 0, 80)) ?>...
+                <p class="card-text text-muted small mb-3" style="min-height: 60px;">
+                    <?= Html::encode(mb_substr($model->summary, 0, 100)) ?><?= mb_strlen($model->summary) > 100 ? '...' : '' ?>
+                </p>
+            <?php else: ?>
+                <p class="card-text text-muted small mb-3" style="min-height: 60px;">
+                    Explore detailed nutrition information, cooking tips, and more about <?= Html::encode($model->name) ?>.
                 </p>
             <?php endif; ?>
 
-            <div class="ingredient-nutrition" style="margin: 10px 0;">
-                <?php if ($model->protein): ?>
-                    <small><strong>Protein:</strong> <?= round($model->protein, 1) ?>g</small><br>
-                <?php endif; ?>
-                <?php if ($model->calories): ?>
-                    <small><strong>Calories:</strong> <?= round($model->calories) ?></small><br>
-                <?php endif; ?>
-                <?php if ($model->fiber): ?>
-                    <small><strong>Fiber:</strong> <?= round($model->fiber, 1) ?>g</small>
-                <?php endif; ?>
-            </div>
-
-            <div class="ingredient-meta">
-                <small class="text-muted">
-                    <span class="glyphicon glyphicon-eye-open"></span> <?= number_format($model->view_count) ?> views
-                    <?php if ($model->rating): ?>
-                        &nbsp;&nbsp;<span class="glyphicon glyphicon-star"></span> <?= round($model->rating, 1) ?>/5
-                    <?php endif; ?>
-                </small>
+            <!-- Nutrition Info -->
+            <div class="nutrition-info mt-auto">
+                <div class="nutrition-item">
+                    <span class="value"><?= $model->protein ? round($model->protein, 1) : '0' ?>g</span>
+                    <span class="label">Protein</span>
+                </div>
+                <div class="nutrition-item">
+                    <span class="value"><?= $model->calories ? round($model->calories) : '0' ?></span>
+                    <span class="label">Calories</span>
+                </div>
+                <div class="nutrition-item">
+                    <span class="value"><?= $model->fiber ? round($model->fiber, 1) : '0' ?>g</span>
+                    <span class="label">Fiber</span>
+                </div>
             </div>
         </div>
-        <div class="panel-footer">
-            <?= Html::a('View Details', ['view', 'slug' => $model->slug], ['class' => 'btn btn-primary btn-block']) ?>
+
+        <!-- Card Footer -->
+        <div class="card-footer bg-white border-top">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <small class="text-muted">
+                    <span class="glyphicon glyphicon-eye-open"></span> <?= number_format($model->view_count) ?>
+                </small>
+                <?php if ($model->rating): ?>
+                    <small class="text-warning">
+                        <span class="glyphicon glyphicon-star"></span> <?= round($model->rating, 1) ?>/5
+                    </small>
+                <?php endif; ?>
+            </div>
+            <?= Html::a(
+                'View Details <span class="glyphicon glyphicon-arrow-right"></span>',
+                ['view', 'slug' => $model->slug],
+                ['class' => 'btn btn-primary btn-sm w-100']
+            ) ?>
         </div>
     </div>
 </div>
